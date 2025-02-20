@@ -5,10 +5,6 @@
 #include "./BNF/bnf.hpp"
 #include "./input_table.hpp"
 
-#include "./trans_kit/trans_kit.hpp"
-
-// #include "./bytecode/translator/translator.hpp"
-
 // source_code_file_name
 // table_file_name
 // bytecode
