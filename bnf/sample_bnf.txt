@@ -1,0 +1,65 @@
+<S> ::= <EL>
+<EL> ::= <E> *
+<E> ::= <value_definition> ";" | <right> ";" | <left> "=" <right> ";" | <ifexpr> ";" | <DEFINITION> ";" | <for> ";" | <return> ";"| <break> ";" | <continue> ";"
+
+<left> ::= <expression> | <value_definition>
+<right> ::= <logic_or> | <json> | <new_class> | <function> | <HTML>
+
+<logic_or> ::= <logic_or> "||" <logic_and> | <logic_and>
+<logic_and> ::= <logic_and> "&&" <comparison_equal> | <comparison_equal>
+
+<comparison_equal> ::= <comparison_equal> "==" <comparison> | <comparison_equal> "!=" <comparison> | <comparison>
+<comparison> ::= <comparison> "<" <expr> | <comparison> "<=" <expr> | <comparison> ">" <expr> | <comparison> ">=" <expr> | <expr>
+
+<expr> ::= <expr> "+" <term> | <expr> "-" <term> | <term>
+<term> ::= <term> "*" <factor> | <term> "/" <factor>  | <term> "%" <factor> | <factor>
+<factor> ::= <expression> | "(" <right> ")" | <number> | <text> | <array>
+
+<value_definition> ::= TYPE <value_name> 
+
+<expression> ::= <identifier> | <identifier> <rest>
+<rest>       ::= <property> | <property> <rest>
+<property>   ::= <dot_property> | <array>
+<dot_property> ::= "." <identifier>
+<identifier> ::= <value_name> | <function_message_passing> | "(" <expression> ")"
+
+<number> ::= NUM
+<text> ::= """ TEXT """ | "'" TEXT "'" | """ NUM """ | "'" NUM "'" | """ """ | "'" "'"
+<key> ::= """ TEXT """ | "'" TEXT "'" | """ NUM """ | "'" NUM "'" | TEXT | NUM
+<value_name> ::= TEXT
+
+<ifexpr> ::= <if_while> | <if_while> <else>
+<if_while> ::= "if" "(" <right> ")" <block> | "while" "(" <right> ")" <block>
+<else> ::= "else" "if" "(" <right> ")" <block> <else> | "else" <block> |
+
+<function> ::= "(" <argument> ")" "=>" <block>
+
+<function_message_passing> ::= <value_name> "(" <array_line> ")" | <value_name> "(" ")" 
+<new_class> ::= "new" TYPE "(" <array_line> ")" | "new" TYPE "(" ")" 
+
+<argument> ::= <value_definition> "," <argument>  | <value_definition> |
+
+<Efor> ::= <value_name> | <value_definition> "=" <right> | <value_name> "=" <right>
+<for> ::= "for" "(" <Efor> ";" <logic_or> ";" <Efor> ")" <block>
+<return> ::= "return" | "return" <right>
+<break> ::= "break"
+<continue> ::= "continue"
+
+<block> ::= "{" <EL> "}"
+
+<DEFINITION> ::= DEFINITION TYPE <block> | DEFINITION TYPE "extends" TYPE <block>
+
+<HTML> ::= <HTML_tag_start> <HTML_children> <HTML_tag_end> | <HTML_tag_single>
+<HTML_children> ::= <HTML> <HTML_children> | TEXT | <block> |
+
+<HTML_tag_start> ::= "<" TEXT <HTML_attribute> ">" | "<" TEXT ">"
+<HTML_tag_end> ::= "</" TEXT ">"
+<HTML_tag_single> ::= "<" TEXT <HTML_attribute> "/>" | "<" TEXT "/>"
+<HTML_attribute> ::= <value_name> "=" <block> | <value_name> "=" <block> <HTML_attribute>
+
+<json> ::= "{" <json_line> "}"
+<json_line> ::= <json_line> "," <json_element> | <json_element> |
+<json_element> ::= <key> ":" <right>
+
+<array> ::= "[" <array_line> "]"
+<array_line> ::= <array_line> "," <right> | <right>
