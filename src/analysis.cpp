@@ -7,12 +7,10 @@
 
 // source_code_file_name
 // table_file_name
-// bytecode
 int main(int argc, char *argv[])
 {
     char *source_code = new char[source_code_size * sizeof(char)];
     string table_file_name = argv[2];
-    // string workspace_directory = argv[3];
 
     loadText(source_code, argv[1], source_code_size);
     string source_code_file_name = argv[1];
