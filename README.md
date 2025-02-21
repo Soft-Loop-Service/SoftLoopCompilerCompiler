@@ -1,4 +1,4 @@
-# Soft Loop Compiler Compiler
+# Soft Loop Compiler Compiler (SLCC)
 
 各プロジェクトでそれぞれ改良を重ねていたコンパイラコンパイラを開発効率化のため集約しました。
 このリポジトリをサブリポジトリとして利用できます。
