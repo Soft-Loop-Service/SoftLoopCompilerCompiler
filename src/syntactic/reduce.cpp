@@ -126,6 +126,23 @@ namespace Syntactic
                 continue;
             }
             printf("ERROR\n");
+
+            // エラートークン前後5個をいい感じにCUIに表示
+
+            for (int j = i - 5; j < i + 5; j++)
+            {
+                if (j < 0 || j >= token_string_vector.size())
+                {
+                    continue;
+                }
+                if (j == i)
+                {
+                    printf("-> ");
+                }
+
+                printf("%s ", token_string_vector[j].token.c_str());
+            }
+
             exit(1);
             return;
         }
