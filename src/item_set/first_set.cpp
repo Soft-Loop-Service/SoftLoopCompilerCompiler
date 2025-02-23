@@ -8,6 +8,12 @@ namespace ItemSet
         this->formula_map_keys = getMapKeyString(this->deployment_syntax.formula_map);
         this->null_set = null_set;
     }
+
+    vstring FirstSetClass::getFormulaMapKeys()
+    {
+        return this->formula_map_keys;
+    }
+
     BNFParse::vDeploymentTokenStruct FirstSetClass::findFirstSetVector(BNFParse::vDeploymentTokenStruct request_token_vector)
     {
         BNFParse::vDeploymentTokenStruct first_set_vecotr = {};
@@ -21,6 +27,8 @@ namespace ItemSet
         for (int i = 0; i < formula_map_size; i++)
         {
             string current_key = this->formula_map_keys[i];
+
+            // printf("current_key %s\n", current_key.c_str());
             recursionFirstsSet(current_key); // 左辺によるfollows集合を求める
         }
 
