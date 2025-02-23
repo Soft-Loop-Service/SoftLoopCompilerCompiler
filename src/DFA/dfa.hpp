@@ -28,9 +28,9 @@ namespace DFAParse
     bool isDfaEqual(DFANode a_node, DFANode b_node);
     int generateDFARoot(DFANode &root_dfa_node);
     vstring getNextLabelDFA(DFANode current_node);
-    int recursionDFA(BNFParse::DeploymentStruct &deployment_syntax, vDFANode &dfa_node_graph, int current_node_index);
+    int recursionDFA(BNFParse::DeploymentStruct &deployment_syntax, vDFANode &dfa_node_graph, int current_node_index, vstring null_set, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> &cash_first_set);
     void outputDFA(vDFANode dfa_node_graph);
-    vDFANode generateDFA(BNFParse::DeploymentStruct deployment_syntax);
+    vDFANode generateDFA(BNFParse::DeploymentStruct deployment_syntax, vstring null_set);
 
     /*
     DFANodeはLRItemStructの機能に加えて他nodeの事も考えることができる。LRItemStructはコンポジションである
@@ -42,12 +42,16 @@ namespace DFAParse
         // vstring already_explored = {};                  // すでに展開した左辺を登録する。無限に再帰展開されないようにするのが目的
         mp_i_i already_explored_formula_expansion = {}; // 一つのアイテム集合内に、同じ展開式が重複して登録されないようにする
 
-        unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set = {};
+        unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set;
+
+        vstring null_set = {};
 
         // int dot = -1;
 
     public:
-        ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax);
+        ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax, vstring null_set, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set);
+
+        unordered_map<size_t, BNFParse::vDeploymentTokenStruct> getCastFirstSet();
         void nodeClosureExpansion(LRItemStruct &lr_item);
         void nodeClosureExpansion(LRItemStruct &lr_item, string search_key);
 
