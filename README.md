@@ -17,6 +17,11 @@ analysis.cpp : 状態遷移表と原始プログラムを参照し構文木を�
 2025-02-24 Null集合の計算処理を行う場所を見直しました </br>
 2025-02-24 Follow 集合のメモ化を行いました。処理時間が1/10程度になりました！ </br>
 
+## 関連プロジェクト
+Soft Loopプロジェクト https://shio3001.github.io/SoftLoopWebsite/  </br>
+Declarative UI for M5Stack https://drive.google.com/file/d/1PJC2soimX92-xUZ7XaN6ypL48Su7wmDo/view?usp=sharing </br>
+Effects24 </br>
+
 ## SLCCの目玉機能
 SLCC 独自拡張BNFでできる記法
 sampleはbnfディレクトリにあります。
