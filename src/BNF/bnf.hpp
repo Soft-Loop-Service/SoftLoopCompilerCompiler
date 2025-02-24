@@ -8,7 +8,7 @@
 namespace BNFParse
 {
     const int bnf_token_len = 50; // BNFトークンの最大長
-    const int bnf_token_arr_len = 1000;
+    const int bnf_token_arr_len = 2000;
 
     struct stest;
     struct BNFToken;

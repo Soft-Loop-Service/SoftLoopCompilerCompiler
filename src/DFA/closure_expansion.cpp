@@ -9,11 +9,74 @@ dot0   dot1  dot2   dot3・・・
 namespace DFAParse
 {
 
-    ClosureExpansion::ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax)
+    ClosureExpansion::ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax, vstring null_set, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set)
     {
         this->deployment_syntax = deployment_syntax;
+        this->null_set = null_set;
+        this->cash_first_set = cash_first_set;
         // this->dot = dot;
     }
+
+    void ClosureExpansion::cashFirstSet(size_t cash_key, BNFParse::vDeploymentTokenStruct &cash_first_set)
+    {
+        this->cash_first_set[cash_key] = cash_first_set;
+    }
+
+    bool ClosureExpansion::hasCashFirstSet(size_t cash_key)
+    {
+        return this->cash_first_set.find(cash_key) != this->cash_first_set.end();
+    }
+
+    BNFParse::vDeploymentTokenStruct ClosureExpansion::getCashFirstSet(size_t &cash_key)
+    {
+        return this->cash_first_set[cash_key];
+    }
+
+    unordered_map<size_t, BNFParse::vDeploymentTokenStruct> ClosureExpansion::getCastFirstSet()
+    {
+        return this->cash_first_set;
+    }
+
+    size_t ClosureExpansion::getCashKey(vstring null_set, BNFParse::vDeploymentTokenStruct cash_first_set)
+    {
+
+        // null_set をsortする
+
+        // cash_first_set をsortする
+        // std::sort(cash_first_set.begin(), cash_first_set.end(), [](const BNFParse::DeploymentTokenStruct &a, const BNFParse::DeploymentTokenStruct &b)
+        //           { return a.token_str < b.token_str; });
+
+        size_t hash = 0;
+        for (const auto &state : cash_first_set)
+        {
+            hash ^= std::hash<string>()(state.token_str) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+            hash ^= std::hash<int>()(state.label) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+        }
+
+        // f_m.formula_map
+
+        // f_mを出力する
+
+        // vstring formula_map_keys = getMapKeyString(f_m.formula_map);
+        // for (int i = 0; i < formula_map_keys.size(); i++)
+        // {
+        //     string key = formula_map_keys[i];
+        //     BNFParse::vDeploymentTokenStruct token_vector = f_m.formula_map[key].formula_expansion_vector;
+        //     for (const auto &state : token_vector)
+        //     {
+        //         hash ^= std::hash<string>()(state.token_str) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+        //         hash ^= std::hash<int>()(state.label) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+        //     }
+        // }
+
+        // for (const auto &state : null_set)
+        // {
+        //     hash ^= std::hash<string>()(state) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+        // }
+
+        return hash;
+    }
+
     void ClosureExpansion::nodeClosureExpansion(LRItemStruct &lr_item)
     {
         // already_explored = {};
@@ -73,15 +136,65 @@ namespace DFAParse
     BNFParse::vDeploymentTokenStruct ClosureExpansion::getLatterFirstSet(LRItemFormulaExpansionStruct LR_formula_expansion, int dot, int look_ahead_index)
     {
 
-        ItemSet::NullSetClass cnull_set_class = ItemSet::NullSetClass(deployment_syntax);
-        ItemSet::FirstSetClass cfirst_set_class = ItemSet::FirstSetClass(deployment_syntax, cnull_set_class.findNullsSet());
+        ItemSet::FirstSetClass cfirst_set_class = ItemSet::FirstSetClass(deployment_syntax, this->null_set);
         BNFParse::vDeploymentTokenStruct latter_token = getLatterToken(LR_formula_expansion, dot, look_ahead_index);
         // auto p3 = std::chrono::high_resolution_clock::now();
-        BNFParse::vDeploymentTokenStruct first_set = cfirst_set_class.findFirstSetVector(latter_token); // ここ重たい(1ms)
-        // auto p4 = std::chrono::high_resolution_clock::now();
 
+        // latter_tokenでfirst_setのメモ化する hasKeyMapは使えない
+
+        size_t cash_key = getCashKey(null_set, latter_token);
+        if (hasCashFirstSet(cash_key))
+        {
+            // cash_keyを print
+            // printf("cash_key : %zu\n", cash_key);
+
+            // for (int i = 0; i < first_set_test.size(); i++)
+            // {
+            //     printf("first_set_test : %s\n", first_set_test[i].token_str.c_str());
+            // }
+
+            BNFParse::vDeploymentTokenStruct v = getCashFirstSet(cash_key);
+
+            // first_set_testとvが違うかったらprint
+
+            // first_set_testとvはsort
+
+            // BNFParse::vDeploymentTokenStruct first_set_test = cfirst_set_class.findFirstSetVector(latter_token);
+            // std::sort(first_set_test.begin(), first_set_test.end(), [](const BNFParse::DeploymentTokenStruct &a, const BNFParse::DeploymentTokenStruct &b)
+            //           { return a.token_str < b.token_str; });
+
+            // std::sort(v.begin(), v.end(), [](const BNFParse::DeploymentTokenStruct &a, const BNFParse::DeploymentTokenStruct &b)
+            //           { return a.token_str < b.token_str; });
+
+            // for (int i = 0; i < first_set_test.size(); i++)
+            // {
+            //     if (first_set_test[i].token_str != v[i].token_str)
+            //     {
+            //         printf("f : %s\n", first_set_test[i].token_str.c_str());
+            //         printf("v : %s\n", v[i].token_str.c_str());
+            //     }
+            // }
+
+            // for (int i = 0; i < v.size(); i++)
+            // {
+            //     printf("v : %s\n", v[i].token_str.c_str());
+            // }
+
+            // auto p5 = std::chrono::high_resolution_clock::now();
+            // std::chrono::duration<double, std::milli> elapsed4 = p5 - p3;
+            // std::cout << "経過時間(A): " << elapsed4.count() << " " << std::endl;
+
+            return v;
+
+            // return getCashFirstSet(cash_key);
+        }
+
+        BNFParse::vDeploymentTokenStruct first_set = cfirst_set_class.findFirstSetVector(latter_token); // ここ重たい(1ms)
+        this->cashFirstSet(cash_key, first_set);
+
+        // auto p4 = std::chrono::high_resolution_clock::now();
         // std::chrono::duration<double, std::milli> elapsed4 = p4 - p3;
-        // std::cout << "経過時間: " << elapsed4.count() << " " << std::endl;
+        // std::cout << "経過時間(B): " << elapsed4.count() << " " << std::endl;
         return first_set;
     }
 

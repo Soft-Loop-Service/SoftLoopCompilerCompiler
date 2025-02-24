@@ -31,6 +31,7 @@ namespace ItemSet
         BNFParse::vDeploymentTokenStruct findFirstSetVector(BNFParse::vDeploymentTokenStruct request_token_vector);
         BNFParse::mp_s_Dtoken findFirstSet();
         void recursionFirstsSet(string current_key);
+        vstring getFormulaMapKeys();
     };
 
     class FollowSetClass
@@ -76,6 +77,5 @@ namespace ItemSet
         bool recursionNullSet(string current_key);
     };
 }
-
 
 #endif
