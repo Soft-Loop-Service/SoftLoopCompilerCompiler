@@ -20,6 +20,8 @@ Syntactic::vSyntacticTree analysisInterface(string source_code_file_name, string
     vstring token_class_type = {};
     LexicalAnalysis::vLexicalToken token_string_vector = LexicalAnalysis::lexSyntax(source_code, token_class_type);
 
+    free(source_code);
+
     LRTable::LRTableMultilayer LR_table_multilayer;
     inputTable(table_file_name, LR_table_multilayer);
 
