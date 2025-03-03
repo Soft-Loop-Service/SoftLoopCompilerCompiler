@@ -20,7 +20,6 @@ namespace Syntactic
         int source_code_line;
         int source_code_column;
         int token_order;
-
         int parent_node_index;
 
         SyntacticTreeNode(string token, int token_label, vint children)
@@ -63,6 +62,18 @@ namespace Syntactic
             this->source_code_column = source_code_column;
             this->token_order = token_order;
         }
+
+        int getChild(int index)
+        {
+            // 範囲内か
+            if (index < 0 || index >= this->children.size())
+            {
+                // プログラム停止
+                throw "Error: SyntacticTreeNode::getChildrenNodeIndex";
+            }
+
+            return this->children[index];
+        }
     };
 
     typedef vector<SyntacticTreeNode> vSyntacticTree;
@@ -75,6 +86,11 @@ namespace Syntactic
         int getChildrenNodeIndex(int, int);
         SyntacticTreeNode getChildrenNode(int, int);
         SyntacticTreeNode getNode(int);
+
+        SyntacticTree()
+        {
+            this->tree = {};
+        }
 
         SyntacticTree(vSyntacticTree tree)
         {
