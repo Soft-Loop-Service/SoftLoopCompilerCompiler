@@ -11,5 +11,8 @@
 // source_code_file_name
 // table_file_name
 // bytecode
+// bytecode
+Syntactic::SyntacticTree analysisInterface(string source_code_file_name, string table_file_name, vstring &token_class_type);
+
 Syntactic::SyntacticTree analysisInterface(string source_code_file_name, string table_file_name);
 #endif

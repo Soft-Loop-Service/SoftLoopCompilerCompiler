@@ -11,12 +11,12 @@
 // source_code_file_name
 // table_file_name
 // bytecode
-Syntactic::SyntacticTree analysisInterface(string source_code_file_name, string table_file_name)
+
+Syntactic::SyntacticTree analysisInterface(string source_code_file_name, string table_file_name, vstring &token_class_type)
 {
     char *source_code = new char[source_code_size * sizeof(char)];
 
     loadText(source_code, source_code_file_name.c_str(), source_code_size);
-    vstring token_class_type = {};
     LexicalAnalysis::vLexicalToken token_string_vector = LexicalAnalysis::lexSyntax(source_code, token_class_type);
 
     free(source_code);
@@ -40,6 +40,12 @@ Syntactic::SyntacticTree analysisInterface(string source_code_file_name, string 
     Syntactic::SyntacticTree syntactic_tree(ast);
 
     return syntactic_tree;
+}
+
+Syntactic::SyntacticTree analysisInterface(string source_code_file_name, string table_file_name)
+{
+    vstring token_class_type = {};
+    return analysisInterface(source_code_file_name, table_file_name, token_class_type);
 }
 
 #endif

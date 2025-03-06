@@ -16,7 +16,7 @@ namespace Syntactic
         if (request_children_index < 0 || request_children_index >= current_node.children.size())
         {
             // 例外スロー
-            printf("error : %d is out of range (children)\n", request_children_index);
+            printf("error : node:%d max:%d,  %d is out of range (children)  \n", request_node_index, current_node.children.size(), request_children_index);
             exit(1);
         }
         int i = current_node.children[request_children_index];

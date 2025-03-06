@@ -183,6 +183,8 @@ namespace LexicalAnalysis
                 lexical_token.erase(lexical_token.begin() + i);
                 lexical_token.erase(lexical_token.begin() + i - 1);
                 lexical_token.erase(lexical_token.begin() + i - 2);
+
+                token_class_type.push_back(lexical_token[i - 3].token);
             }
 
             // iが"もしくは' , i - 1がTEXTもしくはNUM , i - 2が"もしくは' のとき、i - 1をピックアップし、TYPEをSTRINGに変更する。iとi-2を削除する
