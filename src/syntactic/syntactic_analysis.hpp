@@ -20,7 +20,6 @@ namespace Syntactic
         int source_code_line;
         int source_code_column;
         int token_order;
-
         int parent_node_index;
 
         SyntacticTreeNode(string token, int token_label, vint children)
@@ -63,20 +62,48 @@ namespace Syntactic
             this->source_code_column = source_code_column;
             this->token_order = token_order;
         }
+
+        int getChild(int index)
+        {
+            // 範囲内か
+            if (index < 0 || index >= this->children.size())
+            {
+                // プログラム停止
+                throw "Error: SyntacticTreeNode::getChildrenNodeIndex";
+            }
+
+            return this->children[index];
+        }
     };
+
     typedef vector<SyntacticTreeNode> vSyntacticTree;
 
+    class SyntacticTree
+    {
+    public:
+        vSyntacticTree tree;
+
+        int getChildrenNodeIndex(int, int);
+        SyntacticTreeNode getChildrenNode(int, int);
+        SyntacticTreeNode getNode(int);
+
+        SyntacticTree()
+        {
+            this->tree = {};
+        }
+
+        SyntacticTree(vSyntacticTree tree)
+        {
+            this->tree = tree;
+        }
+    };
+
     void output_vReduceFormula(string name, LRTable::vReduceFormula v);
-
     void syntacticAnalysis(LRTable::LRTableMultilayer LR_table_multilayer, LexicalAnalysis::vLexicalToken token_string_vector, LRTable::vReduceFormula &syntactic_analysis_formula);
-
     bool isTokenSkepSyntacticAnalysis(string token_str);
-
     void syntacticParseTree(vSyntacticTree cst, vSyntacticTree &ast);
-
     void debugSyntacticAnalysisTree(vSyntacticTree &syntactic_analysis_tree, bool all);
     void debugSyntacticAnalysisTree(vSyntacticTree &syntactic_analysis_tree);
-
     void syntacticAnalysisTree(LRTable::vReduceFormula syntactic_analysis_formula, vSyntacticTree &syntactic_analysis_tree, LexicalAnalysis::vLexicalToken token_string_vector);
 }
 #endif

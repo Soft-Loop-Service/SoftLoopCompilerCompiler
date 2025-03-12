@@ -152,6 +152,46 @@ namespace LexicalAnalysis
         struct LexicalToken tsd = {DOLLAR, DOLLAR};
         lexical_token.push_back(tsd);
 
+        // "があったら、次の"までを1つのトークンにする
+
+        for (int i = 0; i < lexical_token.size(); i++)
+        {
+            if (lexical_token[i].token == "\"")
+            {
+                int j = i + 1;
+                lexical_token[i].token = "";
+                while (lexical_token[j].token != "\"")
+                {
+                    lexical_token[i].token = lexical_token[i].token + lexical_token[j].token;
+                    j++;
+                }
+                lexical_token.erase(lexical_token.begin() + i + 1, lexical_token.begin() + j + 1);
+                lexical_token[i].token_type = "STRING";
+
+                printf("string : %s\n", lexical_token[i].token.c_str());
+            }
+        }
+
+        // 'があったら、次の'までを1つのトークンにする
+
+        for (int i = 0; i < lexical_token.size(); i++)
+        {
+            if (lexical_token[i].token == "'")
+            {
+                int j = i + 1;
+                lexical_token[i].token = "";
+                while (lexical_token[j].token != "'")
+                {
+                    lexical_token[i].token = lexical_token[i].token + lexical_token[j].token;
+                    j++;
+                }
+                lexical_token.erase(lexical_token.begin() + i + 1, lexical_token.begin() + j + 1);
+                lexical_token[i].token_type = "STRING";
+
+                printf("string : %s\n", lexical_token[i].token.c_str());
+            }
+        }
+
         for (int i = lexical_token.size() - 1; i > 0; i--)
         {
             LexicalToken tb = lexical_token[i - 1];
@@ -183,28 +223,30 @@ namespace LexicalAnalysis
                 lexical_token.erase(lexical_token.begin() + i);
                 lexical_token.erase(lexical_token.begin() + i - 1);
                 lexical_token.erase(lexical_token.begin() + i - 2);
+
+                token_class_type.push_back(lexical_token[i - 3].token);
             }
 
             // iが"もしくは' , i - 1がTEXTもしくはNUM , i - 2が"もしくは' のとき、i - 1をピックアップし、TYPEをSTRINGに変更する。iとi-2を削除する
             // iが"ならi-2も"でないといけない。iが'ならi-2も'でないといけない。
 
-            else if (i - 3 >= 0 && (lexical_token[i].token == "\"" || lexical_token[i].token == "'") && (lexical_token[i - 1].token_type == "TEXT" || lexical_token[i - 1].token_type == "NUM") && (lexical_token[i - 2].token == "\"" || lexical_token[i - 2].token == "'"))
-            {
-                lexical_token[i - 1].token_type = "STRING";
-                // lexical_token[i - 1].token = lexical_token[i - 2].token + lexical_token[i - 1].token + lexical_token[i].token;
-                lexical_token.erase(lexical_token.begin() + i);
-                lexical_token.erase(lexical_token.begin() + i - 2);
-            }
+            // else if (i - 3 >= 0 && (lexical_token[i].token == "\"" || lexical_token[i].token == "'") && (lexical_token[i - 1].token_type == "TEXT" || lexical_token[i - 1].token_type == "NUM") && (lexical_token[i - 2].token == "\"" || lexical_token[i - 2].token == "'"))
+            // {
+            //     lexical_token[i - 1].token_type = "STRING";
+            //     // lexical_token[i - 1].token = lexical_token[i - 2].token + lexical_token[i - 1].token + lexical_token[i].token;
+            //     lexical_token.erase(lexical_token.begin() + i);
+            //     lexical_token.erase(lexical_token.begin() + i - 2);
+            // }
 
             // iが"もしくは' , i - 1が "もしくは' のとき、TYPEをSTRINGにした空文字iを削除、i-1を空文字にし、STRINGにする
             // iが"ならi-1も"でないといけない。iが'ならi-1も'でないといけない。
 
-            else if (i - 2 >= 0 && (lexical_token[i].token == "\"" || lexical_token[i].token == "'") && (lexical_token[i - 1].token == "\"" || lexical_token[i - 1].token == "'"))
-            {
-                lexical_token[i - 1].token_type = "STRING";
-                lexical_token[i - 1].token = "";
-                lexical_token.erase(lexical_token.begin() + i);
-            }
+            // else if (i - 2 >= 0 && (lexical_token[i].token == "\"" || lexical_token[i].token == "'") && (lexical_token[i - 1].token == "\"" || lexical_token[i - 1].token == "'"))
+            // {
+            //     lexical_token[i - 1].token_type = "STRING";
+            //     lexical_token[i - 1].token = "";
+            //     lexical_token.erase(lexical_token.begin() + i);
+            // }
         }
 
         for (int i = 0; i < lexical_token.size(); i++)

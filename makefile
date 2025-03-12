@@ -1,7 +1,7 @@
 
 FLD_SRC = ./src
 BIN_SRC = ./bin
-SRCS_SRC = $(wildcard $(FLD_SRC)/*/*.cpp) $(wildcard $(FLD_SRC)/*/*/*.cpp) $(wildcard $(FLD_SRC)/*/*/*/*.cpp) $(wildcard $(FLD_SRC)/*/*/*/*/*.cpp)
+SRCS_SRC = $(shell find $(FLD_SRC) -type f -name "*.cpp")
 ANALYSIS_SRC = ./src/analysis.cpp $(SRCS_SRC)
 TABLE_SRC = ./src/table.cpp $(SRCS_SRC)
 

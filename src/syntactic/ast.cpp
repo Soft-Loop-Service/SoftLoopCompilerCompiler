@@ -90,7 +90,7 @@ namespace Syntactic
                 }
             }
         }
-        debugSyntacticAnalysisTree(tree, false);
+        // debugSyntacticAnalysisTree(tree, false);
     }
 
     void syntacticParseTree(vSyntacticTree cst, vSyntacticTree &ast)

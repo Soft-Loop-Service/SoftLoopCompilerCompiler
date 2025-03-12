@@ -47,6 +47,8 @@ const vector<string> VALUE_TYPE = {
     "char",
     "void",
     "state",
+    "auto",
+    "any",
     "Object",
     "function",
     "Component",

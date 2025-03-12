@@ -222,7 +222,7 @@ inline bool isExpr(string ts)
     }
 
     const char *token = ts.c_str();
-    return (strchr("+-*/%=<>:\'\"", token[0]) != 0);
+    return (strchr("+-*/%=<>:|&\'\"", token[0]) != 0);
 }
 
 template <typename T>
