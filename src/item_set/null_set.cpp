@@ -16,7 +16,7 @@ namespace ItemSet
             string current_key = this->formula_map_keys[i];
             recursionNullSet(current_key);
         }
-        return null_set;
+        return nullable_nonterminals;
     }
 
     bool NullSetClass::recursionNullSet(string current_key)
@@ -24,14 +24,14 @@ namespace ItemSet
 
         if (hasKeyMap(this->already_explored, current_key))
         {
-            if (hasKeyMap(this->null_set, current_key))
+            if (hasKeyMap(this->nullable_nonterminals, current_key))
             {
                 return true;
             }
             return false;
         }
 
-        if (hasKeyMap(this->null_set, current_key))
+        if (hasKeyMap(this->nullable_nonterminals, current_key))
         {
             return true;
         }
@@ -42,7 +42,7 @@ namespace ItemSet
         if (formula_expansion_vector_size == 0)
         {
             // NULLである
-            null_set.push_back(current_key);
+            nullable_nonterminals.push_back(current_key);
             return true;
         }
 
@@ -55,7 +55,7 @@ namespace ItemSet
 
             if (token_vector_size == 0)
             {
-                null_set.push_back(current_key);
+                nullable_nonterminals.push_back(current_key);
                 return true;
             }
 
@@ -84,11 +84,11 @@ namespace ItemSet
             }
             if (null_count == token_vector_size)
             {
-                null_set.push_back(current_key);
+                nullable_nonterminals.push_back(current_key);
                 return true;
             }
 
-            // this->null_set[current_key] = null_flag;
+            // this->nullable_nonterminals[current_key] = null_flag;
         }
         return false;
     }

@@ -9,10 +9,10 @@ dot0   dot1  dot2   dot3・・・
 namespace DFAParse
 {
 
-    ClosureExpansion::ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax, vstring null_set, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set)
+    ClosureExpansion::ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set)
     {
         this->deployment_syntax = deployment_syntax;
-        this->null_set = null_set;
+        this->nullable_nonterminals = nullable_nonterminals;
         this->cash_first_set = cash_first_set;
         // this->dot = dot;
     }
@@ -37,10 +37,10 @@ namespace DFAParse
         return this->cash_first_set;
     }
 
-    size_t ClosureExpansion::getCashKey(vstring null_set, BNFParse::vDeploymentTokenStruct cash_first_set)
+    size_t ClosureExpansion::getCashKey(vstring nullable_nonterminals, BNFParse::vDeploymentTokenStruct cash_first_set)
     {
 
-        // null_set をsortする
+        // nullable_nonterminals をsortする
 
         // cash_first_set をsortする
         // std::sort(cash_first_set.begin(), cash_first_set.end(), [](const BNFParse::DeploymentTokenStruct &a, const BNFParse::DeploymentTokenStruct &b)
@@ -69,7 +69,7 @@ namespace DFAParse
         //     }
         // }
 
-        // for (const auto &state : null_set)
+        // for (const auto &state : nullable_nonterminals)
         // {
         //     hash ^= std::hash<string>()(state) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
         // }
@@ -136,13 +136,13 @@ namespace DFAParse
     BNFParse::vDeploymentTokenStruct ClosureExpansion::getLatterFirstSet(LRItemFormulaExpansionStruct LR_formula_expansion, int dot, int look_ahead_index)
     {
 
-        ItemSet::FirstSetClass cfirst_set_class = ItemSet::FirstSetClass(deployment_syntax, this->null_set);
+        ItemSet::FirstSetClass cfirst_set_class = ItemSet::FirstSetClass(deployment_syntax, this->nullable_nonterminals);
         BNFParse::vDeploymentTokenStruct latter_token = getLatterToken(LR_formula_expansion, dot, look_ahead_index);
         // auto p3 = std::chrono::high_resolution_clock::now();
 
         // latter_tokenでfirst_setのメモ化する hasKeyMapは使えない
 
-        size_t cash_key = getCashKey(null_set, latter_token);
+        size_t cash_key = getCashKey(nullable_nonterminals, latter_token);
         if (hasCashFirstSet(cash_key))
         {
             // cash_keyを print

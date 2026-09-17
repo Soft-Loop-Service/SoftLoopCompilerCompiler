@@ -3,11 +3,11 @@
 namespace ItemSet
 {
 
-    FollowSetClass::FollowSetClass(BNFParse::DeploymentStruct deployment_syntax, vstring null_set, BNFParse::mp_s_Dtoken first_set)
+    FollowSetClass::FollowSetClass(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals, BNFParse::mp_s_Dtoken first_set)
     {
         this->deployment_syntax = deployment_syntax;
         this->formula_map_keys = getMapKeyString(this->deployment_syntax.formula_map);
-        this->null_set = null_set;
+        this->nullable_nonterminals = nullable_nonterminals;
         this->first_set = first_set;
     }
     BNFParse::mp_s_Dtoken FollowSetClass::findFolllowSet()
@@ -98,7 +98,7 @@ namespace ItemSet
                 this->follow_set[search_key].push_back(next_first_set[i]);
             }
         }
-        bool isNull = hasKeyMap(this->null_set, next_key);
+        bool isNull = hasKeyMap(this->nullable_nonterminals, next_key);
         return isNull;
     }
 

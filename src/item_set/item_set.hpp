@@ -21,13 +21,13 @@ namespace ItemSet
     {
     private:
         BNFParse::DeploymentStruct deployment_syntax;
-        vstring null_set;
+        vstring nullable_nonterminals;
         BNFParse::mp_s_Dtoken first_set;
         vstring formula_map_keys;
         vstring already_explored;
 
     public:
-        FirstSetClass(BNFParse::DeploymentStruct deployment_syntax, vstring null_set);
+        FirstSetClass(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals);
         BNFParse::vDeploymentTokenStruct findFirstSetVector(BNFParse::vDeploymentTokenStruct request_token_vector);
         BNFParse::mp_s_Dtoken findFirstSet();
         void recursionFirstsSet(string current_key);
@@ -39,13 +39,13 @@ namespace ItemSet
     private:
         BNFParse::DeploymentStruct deployment_syntax;
         BNFParse::mp_s_Dtoken first_set;
-        vstring null_set;
+        vstring nullable_nonterminals;
         BNFParse::mp_s_Dtoken follow_set;
         vstring formula_map_keys;
         vstring already_explored;
 
     public:
-        FollowSetClass(BNFParse::DeploymentStruct deployment_syntax, vstring null_set, BNFParse::mp_s_Dtoken first_set);
+        FollowSetClass(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals, BNFParse::mp_s_Dtoken first_set);
         BNFParse::mp_s_Dtoken findFolllowSet();
         void recursionFollowSet(string search_key);
 
@@ -70,7 +70,7 @@ namespace ItemSet
         vstring findNullsSet();
 
     private:
-        vstring null_set;
+        vstring nullable_nonterminals;
         BNFParse::DeploymentStruct deployment_syntax;
         vstring formula_map_keys;
         vstring already_explored;

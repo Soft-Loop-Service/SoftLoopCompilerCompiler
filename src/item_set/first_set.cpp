@@ -2,11 +2,11 @@
 #include "./item_set.hpp"
 namespace ItemSet
 {
-    FirstSetClass::FirstSetClass(BNFParse::DeploymentStruct deployment_syntax, vstring null_set)
+    FirstSetClass::FirstSetClass(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals)
     {
         this->deployment_syntax = deployment_syntax;
         this->formula_map_keys = getMapKeyString(this->deployment_syntax.formula_map);
-        this->null_set = null_set;
+        this->nullable_nonterminals = nullable_nonterminals;
     }
 
     vstring FirstSetClass::getFormulaMapKeys()
@@ -139,7 +139,7 @@ namespace ItemSet
                     }
                     k++;
 
-                } while (k < token_vector_size && (hasKeyMap(this->null_set, token_vector[k - 1].token_str) || recursion_flag));
+                } while (k < token_vector_size && (hasKeyMap(this->nullable_nonterminals, token_vector[k - 1].token_str) || recursion_flag));
             }
         }
     }

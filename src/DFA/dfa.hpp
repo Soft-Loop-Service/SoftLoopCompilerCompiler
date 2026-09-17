@@ -28,9 +28,9 @@ namespace DFAParse
     bool isDfaEqual(DFANode a_node, DFANode b_node);
     int generateDFARoot(DFANode &root_dfa_node);
     vstring getNextLabelDFA(DFANode current_node);
-    int recursionDFA(BNFParse::DeploymentStruct &deployment_syntax, vDFANode &dfa_node_graph, int current_node_index, vstring null_set, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> &cash_first_set);
+    int recursionDFA(BNFParse::DeploymentStruct &deployment_syntax, vDFANode &dfa_node_graph, int current_node_index, vstring nullable_nonterminals, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> &cash_first_set);
     void outputDFA(vDFANode dfa_node_graph);
-    vDFANode generateDFA(BNFParse::DeploymentStruct deployment_syntax, vstring null_set);
+    vDFANode generateDFA(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals);
 
     /*
     DFANodeはLRItemStructの機能に加えて他nodeの事も考えることができる。LRItemStructはコンポジションである
@@ -44,12 +44,12 @@ namespace DFAParse
 
         unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set;
 
-        vstring null_set = {};
+        vstring nullable_nonterminals = {};
 
         // int dot = -1;
 
     public:
-        ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax, vstring null_set, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set);
+        ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set);
 
         unordered_map<size_t, BNFParse::vDeploymentTokenStruct> getCastFirstSet();
         void nodeClosureExpansion(LRItemStruct &lr_item);
@@ -63,7 +63,7 @@ namespace DFAParse
         void cashFirstSet(size_t cash_key, BNFParse::vDeploymentTokenStruct &cash_first_set);
         bool hasCashFirstSet(size_t cash_key);
         BNFParse::vDeploymentTokenStruct getCashFirstSet(size_t &cash_key);
-        size_t getCashKey(vstring null_set, BNFParse::vDeploymentTokenStruct cash_key);
+        size_t getCashKey(vstring nullable_nonterminals, BNFParse::vDeploymentTokenStruct cash_key);
     };
 };
 

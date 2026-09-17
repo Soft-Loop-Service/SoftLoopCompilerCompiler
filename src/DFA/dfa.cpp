@@ -179,7 +179,7 @@ namespace DFAParse
         return new_node;
     }
 
-    int recursionDFA(BNFParse::DeploymentStruct &deployment_syntax, vDFANode &dfa_node_graph, int current_node_index, vstring null_set, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> &cash_first_set)
+    int recursionDFA(BNFParse::DeploymentStruct &deployment_syntax, vDFANode &dfa_node_graph, int current_node_index, vstring nullable_nonterminals, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> &cash_first_set)
     {
         DFANode current_node = dfa_node_graph[current_node_index];
 
@@ -189,7 +189,7 @@ namespace DFAParse
 
         vstring next_labels = getNextLabelDFA(current_node);
 
-        ClosureExpansion closure_expansion = ClosureExpansion(deployment_syntax, null_set, cash_first_set);
+        ClosureExpansion closure_expansion = ClosureExpansion(deployment_syntax, nullable_nonterminals, cash_first_set);
 
         for (int i = 0; i < next_labels.size(); i++)
         {
@@ -219,7 +219,7 @@ namespace DFAParse
             dfa_node_graph.push_back(new_node);
             int push_index = dfa_node_graph.size() - 1;
             dfa_node_graph[current_node_index].children_nodes[next_label] = push_index;
-            recursionDFA(deployment_syntax, dfa_node_graph, push_index, null_set, cash_first_set);
+            recursionDFA(deployment_syntax, dfa_node_graph, push_index, nullable_nonterminals, cash_first_set);
         }
     }
 
@@ -272,13 +272,13 @@ namespace DFAParse
         }
     }
 
-    vDFANode generateDFA(BNFParse::DeploymentStruct deployment_syntax, vstring null_set)
+    vDFANode generateDFA(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals)
     {
         DFANode root_dfa_node = DFANode();
         generateDFARoot(root_dfa_node);
 
         unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set = {};
-        ClosureExpansion closure_expansion = ClosureExpansion(deployment_syntax, null_set, cash_first_set);
+        ClosureExpansion closure_expansion = ClosureExpansion(deployment_syntax, nullable_nonterminals, cash_first_set);
         closure_expansion.nodeClosureExpansion(root_dfa_node.lr_item, ROOT_DFA_SYMBOL);
 
         vDFANode dfa_node_graph = {};
@@ -287,7 +287,7 @@ namespace DFAParse
         cash_first_set = closure_expansion.getCastFirstSet();
 
         printf("DFA NODE");
-        recursionDFA(deployment_syntax, dfa_node_graph, 0, null_set, cash_first_set);
+        recursionDFA(deployment_syntax, dfa_node_graph, 0, nullable_nonterminals, cash_first_set);
         printf("\n");
         outputDFA(dfa_node_graph);
 

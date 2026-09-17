@@ -44,12 +44,12 @@ namespace LRTable
 
         BNFParse::DeploymentStruct deployment_syntax = BNFParse::expansionDeployment(bnf_token, bnf_symbol, nonterminal_symbol_left, symbols);
 
-        ItemSet::NullSetClass cnull_set_class = ItemSet::NullSetClass(deployment_syntax);
-        vstring null_set = cnull_set_class.findNullsSet();
-        std::sort(null_set.begin(), null_set.end());
+        ItemSet::NullSetClass cnullable_nonterminals_class = ItemSet::NullSetClass(deployment_syntax);
+        vstring nullable_nonterminals = cnullable_nonterminals_class.findNullsSet();
+        std::sort(nullable_nonterminals.begin(), nullable_nonterminals.end());
 
         // ItemSetStruct item_set = generateItemSet(deployment_syntax);
-        DFAParse::vDFANode dfa_node_graph = DFAParse::generateDFA(deployment_syntax, null_set);
+        DFAParse::vDFANode dfa_node_graph = DFAParse::generateDFA(deployment_syntax, nullable_nonterminals);
         generateLRtable(dfa_node_graph, bnf_token, terminal_symbol, nonterminal_symbol_left, LR_table_multilayer);
 
         free((bnf_token.token_label_array));
