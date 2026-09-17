@@ -105,6 +105,8 @@ struct BNFParse::DeploymentFormulaStruct
 struct BNFParse::DeploymentFormulaExpansionStruct
 {
     vDeploymentTokenStruct token_vector;
+
+    // 生成規則の一意な番号
     int formula_expansion_label;
 };
 
