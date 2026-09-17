@@ -27,9 +27,10 @@ namespace ItemSet
         vstring already_explored;
 
     public:
+        FirstSetClass();
         FirstSetClass(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals);
         BNFParse::vDeploymentTokenStruct findFirstSetVector(BNFParse::vDeploymentTokenStruct request_token_vector);
-        BNFParse::mp_s_Dtoken findFirstSet();
+        void findFirstSet();
         void recursionFirstsSet(string current_key);
         vstring getFormulaMapKeys();
     };

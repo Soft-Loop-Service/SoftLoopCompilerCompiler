@@ -75,66 +75,17 @@ namespace DFAParse
     BNFParse::vDeploymentTokenStruct ClosureExpansion::getLatterFirstSet(LRItemFormulaExpansionStruct LR_formula_expansion, int dot, int look_ahead_index)
     {
 
-        ItemSet::FirstSetClass cfirst_set_class = ItemSet::FirstSetClass(deployment_syntax, this->nullable_nonterminals);
         BNFParse::vDeploymentTokenStruct latter_token = getLatterToken(LR_formula_expansion, dot, look_ahead_index);
         // auto p3 = std::chrono::high_resolution_clock::now();
 
         // latter_tokenでfirst_setのメモ化する hasKeyMapは使えない
 
-        size_t cash_key = getCashKey(nullable_nonterminals, latter_token);
-        if (hasCashFirstSet(cash_key))
-        {
-            // cash_keyを print
-            // printf("cash_key : %zu\n", cash_key);
-
-            // for (int i = 0; i < first_set_test.size(); i++)
-            // {
-            //     printf("first_set_test : %s\n", first_set_test[i].token_str.c_str());
-            // }
-
-            BNFParse::vDeploymentTokenStruct v = getCashFirstSet(cash_key);
-
-            // first_set_testとvが違うかったらprint
-
-            // first_set_testとvはsort
-
-            // BNFParse::vDeploymentTokenStruct first_set_test = cfirst_set_class.findFirstSetVector(latter_token);
-            // std::sort(first_set_test.begin(), first_set_test.end(), [](const BNFParse::DeploymentTokenStruct &a, const BNFParse::DeploymentTokenStruct &b)
-            //           { return a.token_str < b.token_str; });
-
-            // std::sort(v.begin(), v.end(), [](const BNFParse::DeploymentTokenStruct &a, const BNFParse::DeploymentTokenStruct &b)
-            //           { return a.token_str < b.token_str; });
-
-            // for (int i = 0; i < first_set_test.size(); i++)
-            // {
-            //     if (first_set_test[i].token_str != v[i].token_str)
-            //     {
-            //         printf("f : %s\n", first_set_test[i].token_str.c_str());
-            //         printf("v : %s\n", v[i].token_str.c_str());
-            //     }
-            // }
-
-            // for (int i = 0; i < v.size(); i++)
-            // {
-            //     printf("v : %s\n", v[i].token_str.c_str());
-            // }
-
-            // auto p5 = std::chrono::high_resolution_clock::now();
-            // std::chrono::duration<double, std::milli> elapsed4 = p5 - p3;
-            // std::cout << "経過時間(A): " << elapsed4.count() << " " << std::endl;
-
-            return v;
-
-            // return getCashFirstSet(cash_key);
-        }
-
-        BNFParse::vDeploymentTokenStruct first_set = cfirst_set_class.findFirstSetVector(latter_token); // ここ重たい(1ms)
-        this->cashFirstSet(cash_key, first_set);
+        BNFParse::vDeploymentTokenStruct rv_first_set = first_set.findFirstSetVector(latter_token); // ここ重たい(1ms)
 
         // auto p4 = std::chrono::high_resolution_clock::now();
         // std::chrono::duration<double, std::milli> elapsed4 = p4 - p3;
         // std::cout << "経過時間(B): " << elapsed4.count() << " " << std::endl;
-        return first_set;
+        return rv_first_set;
     }
 
     // search_key : 展開したいkey(左辺key)

@@ -42,14 +42,14 @@ namespace DFAParse
         // vstring already_explored = {};                  // すでに展開した左辺を登録する。無限に再帰展開されないようにするのが目的
         mp_i_i already_explored_formula_expansion = {}; // 一つのアイテム集合内に、同じ展開式が重複して登録されないようにする
 
-        unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set;
+        ItemSet::FirstSetClass first_set;
 
         vstring nullable_nonterminals = {};
 
         // int dot = -1;
 
     public:
-        ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set);
+        ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals, ItemSet::FirstSetClass first_set);
 
         unordered_map<size_t, BNFParse::vDeploymentTokenStruct> getCastFirstSet();
         void nodeClosureExpansion(LRItemStruct &lr_item);
@@ -59,11 +59,6 @@ namespace DFAParse
         BNFParse::vDeploymentTokenStruct getLatterToken(LRItemFormulaExpansionStruct LR_formula_expansion, int dot, int lookAhead_index);
         BNFParse::vDeploymentTokenStruct getLatterFirstSet(LRItemFormulaExpansionStruct LR_formula_expansion, int dot, int lookAhead_index);
         void recursionNodeClosureExpansion(LRItemStruct &lr_item, string search_key, int LR_formula_expansion_vector_index, BNFParse::vDeploymentTokenStruct first_set);
-
-        void cashFirstSet(size_t cash_key, BNFParse::vDeploymentTokenStruct &cash_first_set);
-        bool hasCashFirstSet(size_t cash_key);
-        BNFParse::vDeploymentTokenStruct getCashFirstSet(size_t &cash_key);
-        size_t getCashKey(vstring nullable_nonterminals, BNFParse::vDeploymentTokenStruct cash_key);
     };
 };
 

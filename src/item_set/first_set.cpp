@@ -2,6 +2,10 @@
 #include "./item_set.hpp"
 namespace ItemSet
 {
+
+    FirstSetClass::FirstSetClass(){        
+    }
+
     FirstSetClass::FirstSetClass(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals)
     {
         this->deployment_syntax = deployment_syntax;
@@ -17,21 +21,7 @@ namespace ItemSet
     BNFParse::vDeploymentTokenStruct FirstSetClass::findFirstSetVector(BNFParse::vDeploymentTokenStruct request_token_vector)
     {
         BNFParse::vDeploymentTokenStruct first_set_vecotr = {};
-
-        struct BNFParse::DeploymentTokenStruct root_symbol = {DOLLAR, is_id_Dollar};
-
-        // 一度すべての集合を求める
-        first_set = {};
-        first_set[DOLLAR].push_back(root_symbol);
-        int formula_map_size = this->deployment_syntax.formula_map.size();
-        for (int i = 0; i < formula_map_size; i++)
-        {
-            string current_key = this->formula_map_keys[i];
-
-            // printf("current_key %s\n", current_key.c_str());
-            recursionFirstsSet(current_key); // 左辺によるfollows集合を求める
-        }
-
+        
         int request_token_vector_size = request_token_vector.size();
         for (int i = 0; i < request_token_vector_size; i++)
         {
@@ -59,7 +49,7 @@ namespace ItemSet
         return first_set_vecotr;
     }
 
-    BNFParse::mp_s_Dtoken FirstSetClass::findFirstSet()
+    void FirstSetClass::findFirstSet()
     {
         first_set = {};
         struct BNFParse::DeploymentTokenStruct root_symbol = {DOLLAR, is_id_Dollar};
@@ -70,9 +60,6 @@ namespace ItemSet
             string current_key = this->formula_map_keys[i];
             recursionFirstsSet(current_key);
         }
-
-        //
-        return first_set;
     }
 
     void FirstSetClass::recursionFirstsSet(string current_key)
@@ -112,8 +99,6 @@ namespace ItemSet
 
                     if (label == is_id_NonterminalSymbolRight)
                     {
-
-                        // 左再帰の除去
                         if (current_key == token_str)
                         {
                             recursion_flag = true;
