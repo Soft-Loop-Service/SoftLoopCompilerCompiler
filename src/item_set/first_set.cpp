@@ -21,7 +21,6 @@ namespace ItemSet
     BNFParse::vDeploymentTokenStruct FirstSetClass::findFirstSetVector(BNFParse::vDeploymentTokenStruct request_token_vector)
     {
         BNFParse::vDeploymentTokenStruct first_set_vecotr = {};
-        
         int request_token_vector_size = request_token_vector.size();
         for (int i = 0; i < request_token_vector_size; i++)
         {

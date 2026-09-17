@@ -3,87 +3,76 @@
 namespace DFAParse
 {
 
-    bool isDfaEqual(DFANode a_node, DFANode b_node)
+    size_t getDfaSeedHash(DFANode a_node)
     {
+        size_t hash = 0;
+        // for (const auto &state : cash_first_set)
+        // {
+        //     hash ^= std::hash<string>()(state.token_str) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+        //     hash ^= std::hash<int>()(state.label) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+        // }
+
         mapLRItemFormulaStruct a_LR_formula_map = a_node.lr_item.LR_formula_map;
-        mapLRItemFormulaStruct b_LR_formula_map = b_node.lr_item.LR_formula_map;
 
         vstring a_LR_formula_map_keys = getMapKeyString(a_LR_formula_map);
-        vstring b_LR_formula_map_keys = getMapKeyString(b_LR_formula_map);
-
-        if (a_LR_formula_map_keys.size() != b_LR_formula_map_keys.size())
-        {
-            return false;
-        }
 
         for (int i = 0; i < a_LR_formula_map_keys.size(); i++)
         {
             LRItemFormulaStruct a_LR_formula = a_LR_formula_map[a_LR_formula_map_keys[i]];
-            LRItemFormulaStruct b_LR_formula = b_LR_formula_map[b_LR_formula_map_keys[i]];
 
-            if (a_LR_formula.LR_formula_expansion_vector.size() != b_LR_formula.LR_formula_expansion_vector.size())
+            auto tokenLess = [](const auto &a, const auto &b)
             {
-                return false;
+                return std::tie(a.label, a.token_str) <
+                       std::tie(b.label, b.token_str);
+            };
+
+            auto &items = a_LR_formula.LR_formula_expansion_vector;
+
+            for (auto &item : items)
+            {
+                std::sort(item.look_ahead.begin(), item.look_ahead.end(), tokenLess);
             }
+
+            std::sort(items.begin(), items.end(), [&](const auto &a, const auto &b)
+                      {
+                        if (a.formula_expansion_label != b.formula_expansion_label)
+                            return a.formula_expansion_label < b.formula_expansion_label;
+                        if (a.dot != b.dot)
+                            return a.dot < b.dot;
+
+                        return std::lexicographical_compare(
+                            a.look_ahead.begin(), a.look_ahead.end(),
+                            b.look_ahead.begin(), b.look_ahead.end(),
+                            tokenLess
+                        ); });
 
             for (int j = 0; j < a_LR_formula.LR_formula_expansion_vector.size(); j++)
             {
                 LRItemFormulaExpansionStruct a_LR_formula_expansion = a_LR_formula.LR_formula_expansion_vector[j];
-                LRItemFormulaExpansionStruct b_LR_formula_expansion = b_LR_formula.LR_formula_expansion_vector[j];
+
                 BNFParse::vDeploymentTokenStruct a_token_vector = a_LR_formula_expansion.token_vector;
-                BNFParse::vDeploymentTokenStruct b_token_vector = b_LR_formula_expansion.token_vector;
                 BNFParse::vDeploymentTokenStruct a_look_ahead = a_LR_formula_expansion.look_ahead;
-                BNFParse::vDeploymentTokenStruct b_look_ahead = b_LR_formula_expansion.look_ahead;
 
-                if (a_LR_formula_expansion.dot != b_LR_formula_expansion.dot)
-                {
-                    return false;
-                }
-                if (a_token_vector.size() != b_token_vector.size())
-                {
-                    return false;
-                }
-                if (a_look_ahead.size() != b_look_ahead.size())
-                {
-                    return false;
-                }
+                int dot = a_LR_formula_expansion.dot;
+                int formula_expansion_label = a_LR_formula_expansion.formula_expansion_label;
 
-                int t_count = 0;
+                hash ^= std::hash<int>()(formula_expansion_label) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+                hash ^= std::hash<int>()(dot) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+
                 for (int k = 0; k < a_token_vector.size(); k++)
                 {
-                    for (int n = 0; n < b_token_vector.size(); n++)
-                    {
-                        if (a_token_vector[k].token_str == b_token_vector[n].token_str)
-                        {
-                            t_count++;
-                            break;
-                        }
-                    }
-                }
-                if (t_count != a_token_vector.size())
-                {
-                    return false;
+                    hash ^= std::hash<int>()(a_token_vector[k].label) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+                    hash ^= std::hash<string>()(a_token_vector[k].token_str) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
                 }
 
-                int l_count = 0;
                 for (int k = 0; k < a_look_ahead.size(); k++)
                 {
-                    for (int n = 0; n < b_look_ahead.size(); n++)
-                    {
-                        if (a_look_ahead[k].token_str == b_look_ahead[n].token_str)
-                        {
-                            l_count++;
-                            break;
-                        }
-                    }
-                }
-                if (l_count != a_look_ahead.size())
-                {
-                    return false;
+                    hash ^= std::hash<int>()(a_look_ahead[k].label) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+                    hash ^= std::hash<string>()(a_look_ahead[k].token_str) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
                 }
             }
         }
-        return true;
+        return hash;
     }
 
     int generateDFARoot(DFANode &root_dfa_node)
@@ -179,7 +168,7 @@ namespace DFAParse
         return new_node;
     }
 
-    int recursionDFA(BNFParse::DeploymentStruct &deployment_syntax, vDFANode &dfa_node_graph, int current_node_index, vstring nullable_nonterminals, ItemSet::FirstSetClass &first_set)
+    int recursionDFA(BNFParse::DeploymentStruct &deployment_syntax, vDFANode &dfa_node_graph, int current_node_index, vstring nullable_nonterminals, ItemSet::FirstSetClass &first_set, map<size_t, int> &existing_nodes)
     {
         DFANode current_node = dfa_node_graph[current_node_index];
 
@@ -195,30 +184,26 @@ namespace DFAParse
         {
             string next_label = next_labels[i];
             DFANode new_node = generateNewNodeDFA(deployment_syntax, current_node, next_label);
-            closure_expansion.nodeClosureExpansion(new_node.lr_item); // この関数が重たそう
+
+            size_t hash = getDfaSeedHash(new_node);
 
             // ここに時間を測定したい処理を記述
 
-            int flag = -1;
-            for (int j = 0; j < dfa_node_graph.size(); j++)
-            {
-                if (isDfaEqual(new_node, dfa_node_graph[j]))
-                {
-                    flag = j;
-                    break;
-                }
-            }
-            if (flag != -1)
+            // すでにあるnode
+            if (existing_nodes.find(hash) != existing_nodes.end())
             {
                 // 既に存在するなら、それを子要素として挿入する
-                dfa_node_graph[current_node_index].children_nodes[next_label] = flag;
+                dfa_node_graph[current_node_index].children_nodes[next_label] = existing_nodes.at(hash);
                 continue;
             }
+
+            closure_expansion.nodeClosureExpansion(new_node.lr_item); // この関数が重たそう
 
             dfa_node_graph.push_back(new_node);
             int push_index = dfa_node_graph.size() - 1;
             dfa_node_graph[current_node_index].children_nodes[next_label] = push_index;
-            recursionDFA(deployment_syntax, dfa_node_graph, push_index, nullable_nonterminals, first_set);
+            existing_nodes[hash] = push_index;
+            recursionDFA(deployment_syntax, dfa_node_graph, push_index, nullable_nonterminals, first_set, existing_nodes);
         }
     }
 
@@ -284,9 +269,10 @@ namespace DFAParse
         vDFANode dfa_node_graph = {};
         dfa_node_graph.push_back(root_dfa_node);
 
+        map<size_t, int> existing_nodes = {};
 
         printf("DFA NODE");
-        recursionDFA(deployment_syntax, dfa_node_graph, 0, nullable_nonterminals, fsc);
+        recursionDFA(deployment_syntax, dfa_node_graph, 0, nullable_nonterminals, fsc, existing_nodes);
         printf("\n");
         outputDFA(dfa_node_graph);
 
