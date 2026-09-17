@@ -1,0 +1,14 @@
+int counter;
+counter = 3;
+
+while (counter > 0) {
+    counter = counter - 1;
+};
+
+if (counter == 0) {
+    counter = 10;
+} else {
+    counter = 20;
+};
+
+counter;
