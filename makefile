@@ -1,7 +1,7 @@
 
 FLD_SRC = ./src
 BIN_SRC = ./bin
-SRCS_SRC = $(shell find $(FLD_SRC) -type f -name "*.cpp")
+SRCS_SRC = $(filter-out $(FLD_SRC)/analysis.cpp $(FLD_SRC)/table.cpp,$(shell find $(FLD_SRC) -type f -name "*.cpp"))
 ANALYSIS_SRC = ./src/analysis.cpp $(SRCS_SRC)
 TABLE_SRC = ./src/table.cpp $(SRCS_SRC)
 
