@@ -9,72 +9,11 @@ dot0   dot1  dot2   dot3・・・
 namespace DFAParse
 {
 
-    ClosureExpansion::ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals, unordered_map<size_t, BNFParse::vDeploymentTokenStruct> cash_first_set)
+    ClosureExpansion::ClosureExpansion(BNFParse::DeploymentStruct deployment_syntax, vstring nullable_nonterminals, ItemSet::FirstSetClass first_set)
     {
         this->deployment_syntax = deployment_syntax;
         this->nullable_nonterminals = nullable_nonterminals;
-        this->cash_first_set = cash_first_set;
-        // this->dot = dot;
-    }
-
-    void ClosureExpansion::cashFirstSet(size_t cash_key, BNFParse::vDeploymentTokenStruct &cash_first_set)
-    {
-        this->cash_first_set[cash_key] = cash_first_set;
-    }
-
-    bool ClosureExpansion::hasCashFirstSet(size_t cash_key)
-    {
-        return this->cash_first_set.find(cash_key) != this->cash_first_set.end();
-    }
-
-    BNFParse::vDeploymentTokenStruct ClosureExpansion::getCashFirstSet(size_t &cash_key)
-    {
-        return this->cash_first_set[cash_key];
-    }
-
-    unordered_map<size_t, BNFParse::vDeploymentTokenStruct> ClosureExpansion::getCastFirstSet()
-    {
-        return this->cash_first_set;
-    }
-
-    size_t ClosureExpansion::getCashKey(vstring nullable_nonterminals, BNFParse::vDeploymentTokenStruct cash_first_set)
-    {
-
-        // nullable_nonterminals をsortする
-
-        // cash_first_set をsortする
-        // std::sort(cash_first_set.begin(), cash_first_set.end(), [](const BNFParse::DeploymentTokenStruct &a, const BNFParse::DeploymentTokenStruct &b)
-        //           { return a.token_str < b.token_str; });
-
-        size_t hash = 0;
-        for (const auto &state : cash_first_set)
-        {
-            hash ^= std::hash<string>()(state.token_str) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-            hash ^= std::hash<int>()(state.label) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-        }
-
-        // f_m.formula_map
-
-        // f_mを出力する
-
-        // vstring formula_map_keys = getMapKeyString(f_m.formula_map);
-        // for (int i = 0; i < formula_map_keys.size(); i++)
-        // {
-        //     string key = formula_map_keys[i];
-        //     BNFParse::vDeploymentTokenStruct token_vector = f_m.formula_map[key].formula_expansion_vector;
-        //     for (const auto &state : token_vector)
-        //     {
-        //         hash ^= std::hash<string>()(state.token_str) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-        //         hash ^= std::hash<int>()(state.label) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-        //     }
-        // }
-
-        // for (const auto &state : nullable_nonterminals)
-        // {
-        //     hash ^= std::hash<string>()(state) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-        // }
-
-        return hash;
+        this->first_set = first_set;
     }
 
     void ClosureExpansion::nodeClosureExpansion(LRItemStruct &lr_item)
