@@ -277,6 +277,7 @@ namespace DFAParse
         generateDFARoot(root_dfa_node);
 
         ItemSet::FirstSetClass fsc(deployment_syntax, nullable_nonterminals);
+        fsc.findFirstSet();
         ClosureExpansion closure_expansion = ClosureExpansion(deployment_syntax, nullable_nonterminals, fsc);
         closure_expansion.nodeClosureExpansion(root_dfa_node.lr_item, ROOT_DFA_SYMBOL);
 
